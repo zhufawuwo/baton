@@ -1,3 +1,5 @@
+#! python3
+# coding:utf-8
 import configparser
 import os
 home = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

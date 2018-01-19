@@ -13,6 +13,7 @@ class OpenFlowChannel(Protocol):
 
     def connectionMade(self):
         print(self.transport)
+        print(self.transport.__dict__)
 
     def connectionLost(self, reason=connectionDone):
         pass

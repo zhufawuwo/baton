@@ -8,11 +8,17 @@ class OpenFlowChannel(Protocol):
     def dataReceived(self, data):
         print(data)
 
+    def sendData(self,data):
+        self.transport.write(data)
+
     def connectionMade(self):
-        pass
+        print(self.transport)
 
     def connectionLost(self, reason=connectionDone):
         pass
+
+
+
 
 
 class OpenFlowListener(Factory):

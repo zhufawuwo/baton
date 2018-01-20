@@ -56,5 +56,5 @@ if __name__ == "__main__":
     msg = b'\x04\x00\x00\x08\x00\x00\x00\x03'
     ret = OpenFlowProtocol.parse_ofp_header(msg)
     print(ret)
-    vers = [1.1,1.3]
+    vers = [1.1,1.3,1.4]
     print(OpenFlowProtocol.hello(vers))

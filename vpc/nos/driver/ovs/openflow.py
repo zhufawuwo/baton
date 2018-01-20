@@ -2,7 +2,7 @@
 # coding: utf-8
 
 import struct
-from lib.openflow import base
+from baton.lib.openflow import base
 
 class OpenFlowProtocol(object):
     OFPT_HELLO = 0

@@ -13,6 +13,7 @@ class OpenFlowChannel(Protocol):
         self.versions = set(map(float,str(conf.get("protocol","versions")).split('|')))
 
     def dataReceived(self, data):
+        print(data)
         ver,oftype,len,xid = OFP.parse_ofp_header(data)
         if oftype == OFP.OFPT_HELLO :
             self._handle_hello(data)

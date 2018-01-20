@@ -4,7 +4,7 @@ from twisted.internet import reactor
 from twisted.internet.protocol import Protocol,Factory,connectionDone
 
 from pub import *
-from .openflow import OpenFlowProtocol as OFP
+from openflow import OpenFlowProtocol as OFP
 
 
 class OpenFlowChannel(Protocol):

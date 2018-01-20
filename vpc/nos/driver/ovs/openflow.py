@@ -6,8 +6,11 @@ from lib.openflow import base
 
 class OpenFlowProtocol(object):
     OFPT_HELLO = 0
-    def __init__(self):
-        pass
+    def __init__(self,version=None,build=None,parse=None,oxm=None):
+        self.version = version
+        self.build = build
+        self.parse = parse
+        self.oxm = oxm
 
     @classmethod
     def parse_ofp_header(cls,msg):
@@ -52,9 +55,22 @@ class OpenFlowProtocol(object):
             return version
         return None
 
+    @classmethod
+    def get_ofp_instance(cls,version):
+        if version == 4:
+            from lib.openflow.ofp4 import build,parse,oxm
+        elif version == 5:
+            from lib.openflow.ofp5 import build,parse,oxm
+        else :
+            assert "no openflow instance avalible"
+        return OpenFlowProtocol(version,build,parse,oxm)
+
+
+
+
 if __name__ == "__main__":
     msg = b'\x04\x00\x00\x08\x00\x00\x00\x03'
     ret = OpenFlowProtocol.parse_ofp_header(msg)
-    print(ret)
-    vers = [1.1,1.3,1.4]
-    print(OpenFlowProtocol.hello(vers))
+    p = OpenFlowProtocol.get_ofp_instance(4)
+    print(p.build.OFPT_PACKET_IN)
+

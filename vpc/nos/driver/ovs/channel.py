@@ -4,13 +4,14 @@ from twisted.internet import reactor
 from twisted.internet.protocol import Protocol,Factory,connectionDone
 
 from pub import *
-from openflow import OpenFlowProtocol as OFP
+from .openflow import OpenFlowProtocol as OFP
 
 
 class OpenFlowChannel(Protocol):
     def __init__(self):
         super().__init__()
         self.versions = set(map(float,str(conf.get("protocol","versions")).split('|')))
+        self.ofp = None
 
     def dataReceived(self, data):
         print(data)
@@ -37,7 +38,7 @@ class OpenFlowChannel(Protocol):
         accept_versions = self.versions
         version = OFP.negotiate_version(versions,accept_versions)
         if version :
-            pass
+            self.ofp = OFP.get_ofp_instance(version)
         else :
             self.sendData(OFP.hello_failed())
 

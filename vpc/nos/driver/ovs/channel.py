@@ -18,11 +18,11 @@ class MBus():
             return f
         return decorator
 
-    def dispatch(self,msg):
+    def dispatch(self,chn,msg):
         ver,oftype,len,xid = self.ofp.parse_ofp_header(msg)
         handler = self._mmap.get(oftype,None)
         if handler :
-            handler(msg)
+            handler(chn,msg)
 
 
 mbus = MBus()
@@ -45,7 +45,7 @@ class OpenFlowChannel(Protocol):
         pass
 
     def send_hello(self):
-        msg = OFP.hello(self.versions)
+        msg = OFP.hello(OFP.VERSIONS)
         self.sendData(msg)
 
     @mbus.route(mbus.ofp.OFPT_HELLO)

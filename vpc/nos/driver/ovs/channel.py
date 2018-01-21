@@ -64,7 +64,7 @@ class OpenFlowChannel(Protocol):
 
     @mbus.route(mbus.ofp.OFPT_PACKET_IN)
     def handle_packet_in(self,msg):
-        pass
+        print(msg)
 
 
 class OpenFlowListener(Factory):

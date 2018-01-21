@@ -7,62 +7,64 @@ from pub import *
 from vpc.nos.driver.ovs.openflow import OpenFlowProtocol as OFP
 
 
+class MBus():
+    def __init__(self):
+        self._mmap = {}
+        self.ofp = OFP.get_ofp_instance(max(OFP.VERSIONS))
+
+    def route(self,mtype):
+        def decorator(f):
+            self._mmap[mtype] = f
+            return f
+        return decorator
+
+    def dispatch(self,msg):
+        ver,oftype,len,xid = self.ofp.parse_ofp_header(msg)
+        handler = self._mmap.get(oftype,None)
+        if handler :
+            handler(msg)
+
+
+mbus = MBus()
+
 class OpenFlowChannel(Protocol):
     def __init__(self):
         super().__init__()
-        self.versions = set(map(float,str(conf.get("protocol","versions")).split('|')))
         self.ofp = None
-        self._mmap = {}
-
-    def _init_msg_map(self,ofp):
-        for x in dir(ofp):
-            if x.startswith("OFP"):
-                msg_type = getattr(ofp,x)
-                handler = getattr(self,"handle_"+x.lower(),None)
-                if handler :
-                    self._mmap[msg_type] = handler
-
-    def _dispath_openflow_message(self, msg):
-        ver, oftype, len, xid = OFP.parse_ofp_header(msg)
-        if oftype in self._mmap :
-            self._mmap[oftype](msg)
-        else :
-            if oftype == OFP.OFPT_HELLO :
-                self.handle_ofpt_hello(msg)
 
     def dataReceived(self, data):
-        self._dispath_openflow_message(data)
+        mbus.dispatch(data)
 
     def sendData(self,data):
         self.transport.write(data)
 
     def connectionMade(self):
-        self._send_hello()
+        self.send_hello()
 
     def connectionLost(self, reason=connectionDone):
         pass
 
-    def _send_hello(self):
+    def send_hello(self):
         msg = OFP.hello(self.versions)
         self.sendData(msg)
 
-    def handle_ofpt_hello(self,msg):
+    @mbus.route(mbus.ofp.OFPT_HELLO)
+    def handle_hello(self,msg):
         versions = OFP.parse_hello(msg)
-        accept_versions = self.versions
+        accept_versions = OFP.VERSIONS
         version = OFP.negotiate_version(versions,accept_versions)
         if version :
             self.ofp = OFP.get_ofp_instance(version)
-            self._init_msg_map(self.ofp)
         else :
             self.sendData(OFP.hello_failed())
 
-    def handle_ofpt_packet_in(self,msg):
-        print(msg)
-
-    def handle_ofpt_features_reply(self,msg):
+    @mbus.route(mbus.ofp.OFPT_FEATURES_REPLY)
+    def handle_features_reply(self,msg):
         pass
 
-
+    @mbus.route(mbus.ofp.OFPT_PACKET_IN)
+    def handle_packet_in(self,msg):
+        pass
 
 
 class OpenFlowListener(Factory):

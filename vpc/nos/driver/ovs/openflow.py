@@ -6,6 +6,10 @@ from lib.openflow import base
 
 class OpenFlowProtocol(object):
     OFPT_HELLO = 0
+    OFP4 = 4
+    OFP5 = 5
+    VERSIONS = (OFP4,OFP5)
+
     def __init__(self,version,ofp,build,parse,oxm):
         self.version = version
         for x in dir(ofp):

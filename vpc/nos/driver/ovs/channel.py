@@ -17,10 +17,12 @@ class OpenFlowChannel(Protocol):
     def _init_msg_map(self,ofp):
         for x in dir(ofp):
             if x.startswith("OFP"):
-                msg_type = getattr(self,x)
+                msg_type = getattr(ofp,x)
                 handler = getattr(self,"handle_"+x,None)
                 if handler :
                     self._mmap[msg_type] = handler
+
+        print(self._mmap)
 
 
     def _dispath_openflow_message(self, msg):

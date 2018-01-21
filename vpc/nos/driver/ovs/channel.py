@@ -17,6 +17,7 @@ class OpenFlowChannel(Protocol):
     def _init_msg_map(self,ofp):
         for x in dir(ofp):
             if x.startswith("OFP"):
+                print(x)
                 msg_type = getattr(ofp,x)
                 handler = getattr(self,"handle_"+x,None)
                 if handler :

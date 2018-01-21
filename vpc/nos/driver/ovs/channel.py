@@ -17,18 +17,13 @@ class OpenFlowChannel(Protocol):
     def _init_msg_map(self,ofp):
         for x in dir(ofp):
             if x.startswith("OFP"):
-                print(x)
                 msg_type = getattr(ofp,x)
-                handler = getattr(self,"handle_"+x,None)
+                handler = getattr(self,"handle_"+x.lower(),None)
                 if handler :
                     self._mmap[msg_type] = handler
 
-        print(self._mmap)
-
-
     def _dispath_openflow_message(self, msg):
         ver, oftype, len, xid = OFP.parse_ofp_header(msg)
-        print(oftype)
         if oftype in self._mmap :
             self._mmap[oftype](msg)
         else :
@@ -62,7 +57,7 @@ class OpenFlowChannel(Protocol):
             self.sendData(OFP.hello_failed())
 
     def handle_ofpt_packet_in(self,msg):
-        pass
+        print(msg)
 
     def handle_ofpt_features_reply(self,msg):
         pass

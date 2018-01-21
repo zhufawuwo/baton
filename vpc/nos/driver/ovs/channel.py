@@ -33,7 +33,7 @@ class OpenFlowChannel(Protocol):
         self.ofp = None
 
     def dataReceived(self, data):
-        mbus.dispatch(data)
+        mbus.dispatch(self,data)
 
     def sendData(self,data):
         self.transport.write(data)

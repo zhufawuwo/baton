@@ -9,6 +9,8 @@ class OVS(NetworkElement):
         self.ofp = self.chn.ofp
 
 
+    def _dispatch(self,event):
+        pass
 
 
 

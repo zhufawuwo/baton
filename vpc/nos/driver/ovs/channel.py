@@ -66,6 +66,13 @@ class OpenFlowChannel(Protocol):
     def handle_packet_in(self,msg):
         print(msg)
 
+    @mbus.route(mbus.ofp.OFPT_ECHO_REQUEST)
+    def handle_echo_request(self,msg):
+        header,data = self.ofp.p.parse(msg)
+        h = self.ofp.b.ofp_header(header.version,self.ofp.OFPT_ECHO_REPLY,header.length,header.xid)
+        reply = self.ofp.b.ofp_(h,data)
+        return reply
+
 
 class OpenFlowListener(Factory):
     protocol = OpenFlowChannel

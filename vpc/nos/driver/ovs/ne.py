@@ -8,11 +8,6 @@ class OVS(NetworkElement):
         self.chn = channel
         self.ofp = self.chn.ofp
 
-    def handle_ofp_message(self,msg):
-        version,oftype,len,xid = self.ofp.p.parse_ofp_header(msg)
-        if oftype in self._msg_map :
-            handler = self._msg_map[oftype]
-            handler(msg)
 
 
 

@@ -44,9 +44,14 @@ class OpenFlowChannel(Protocol):
     def connectionLost(self, reason=connectionDone):
         pass
 
+
+    def send_message(self,msg):
+        self.sendData(msg)
+
+
     def send_hello(self):
         msg = OFP.hello(OFP.VERSIONS)
-        self.sendData(msg)
+        self.send_message(msg)
 
     @mbus.route(mbus.ofp.OFPT_HELLO)
     def handle_hello(self,msg):
@@ -71,7 +76,7 @@ class OpenFlowChannel(Protocol):
         header,data = self.ofp.p.parse(msg)
         h = self.ofp.b.ofp_header(header.version,self.ofp.OFPT_ECHO_REPLY,header.length,header.xid)
         reply = self.ofp.b.ofp_(h,data)
-        return reply
+        self.send_message(reply)
 
 
 class OpenFlowListener(Factory):

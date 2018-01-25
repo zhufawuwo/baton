@@ -1,5 +1,5 @@
 from .config import conf
-from .tree import Node
+from .log import logger
 from .utils import singleton,guid
 
-__all__ = ['conf','Node','singleton','guid']
+__all__ = ['conf','logger','singleton','guid']

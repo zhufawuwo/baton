@@ -74,6 +74,7 @@ class OpenFlowChannel(Protocol):
 
     @mbus.route(mbus.ofp.OFPT_FEATURES_REPLY)
     def handle_features_reply(self,msg):
+        print(msg)
         header,data = self.ofp.p.parse(msg)
         datapath = None
         self._create_ne(datapath)

@@ -3,7 +3,8 @@
 from twisted.internet import reactor
 from twisted.internet.protocol import Protocol,Factory,connectionDone
 
-from pub import conf,guid
+from pub.config import conf
+from pub.utils import guid
 from vpc.nos.driver.ovs.openflow import OpenFlowProtocol as OFP
 from vpc.nos.driver.ovs.ne import OVSEvent,OVS
 from vpc.nos import NetworkElementRegister

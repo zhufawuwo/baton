@@ -13,11 +13,11 @@ class OVS(NetworkElement):
         super().__init__(nid)
         self.chn = channel
         self.ofp = self.chn.ofp
-        self.datapath = datapath
+        self._datapath = datapath
 
     @property
     def datapath(self):
-        return self.datapath
+        return self._datapath
 
 
 

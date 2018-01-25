@@ -21,7 +21,7 @@ class MBus():
         return decorator
 
     def dispatch(self,chn,msg):
-        ver,oftype,len,xid = self.ofp.parse_ofp_header(msg)
+        ver,oftype,len,xid = chn.ofp.parse_ofp_header(msg)
         handler = self._mmap.get(oftype,None)
         if handler :
             handler(chn,msg)

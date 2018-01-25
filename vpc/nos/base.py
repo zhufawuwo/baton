@@ -9,7 +9,12 @@ from pub.utils import singleton,EnumBase
 
 class NetworkElement():
     def __init__(self):
-        self.id = guid()
+        self._id = guid()
+
+    @property
+    def id(self):
+        return self._id
+
 
 class NetworkElementEvent(dict):
     def __init__(self,nid,type):
@@ -50,12 +55,13 @@ class EventNode(Node):
     FILTER = 2
     APP = 3
 
-    def __init__(self,name):
+    def __init__(self,name,tag):
         super().__init__(name)
+        self._tag = tag
 
     @property
     def tag(self):
-        return self.tag
+        return self._tag
 
     def _dispatch(self,event):
         for child in self._children:
@@ -67,8 +73,7 @@ class EventNode(Node):
 @singleton
 class EventChain(EventNode):
     def __init__(self):
-        super().__init__("entrance")
-        self.tag = EventNode.ENTRANCE
+        super().__init__("entrance",EventNode.ENTRANCE)
 
     def feed(self,e):
         print(e)

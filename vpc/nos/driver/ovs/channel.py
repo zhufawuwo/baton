@@ -58,6 +58,7 @@ class OpenFlowChannel(Protocol):
     def _create_ne(self,datapath):
         ne  = OVS(guid(),self,datapath)
         NetworkElementRegister().register(ne)
+        return ne
 
     @mbus.route(mbus.ofp.OFPT_HELLO)
     def handle_hello(self,msg):
@@ -73,14 +74,13 @@ class OpenFlowChannel(Protocol):
 
     @mbus.route(mbus.ofp.OFPT_FEATURES_REPLY)
     def handle_features_reply(self,msg):
-        header,data = self.ofp.p.parse(msg)
-
-
-
+        ret = self.ofp.p.parse(msg)
+        ne = self._create_ne(ret.datapath_id)
+        self.ne_id = ne.id
 
     @mbus.route(mbus.ofp.OFPT_PACKET_IN)
     def handle_packet_in(self,msg):
-        header,data = self.ofp.p.parse(msg)
+        ret = self.ofp.p.parse(msg)
 
     @mbus.route(mbus.ofp.OFPT_ECHO_REQUEST)
     def handle_echo_request(self,msg):

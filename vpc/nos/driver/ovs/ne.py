@@ -21,7 +21,7 @@ class OVS(NetworkElement):
 
     def ne_online(self):
         e = OVSEvent(self.id,event_t.NE_ONLINE)
-        EventChain.feed(e)
+        EventChain().feed(e)
 
 
 

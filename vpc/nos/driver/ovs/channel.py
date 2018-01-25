@@ -5,7 +5,8 @@ from twisted.internet.protocol import Protocol,Factory,connectionDone
 
 from pub import conf,guid
 from vpc.nos.driver.ovs.openflow import OpenFlowProtocol as OFP
-from vpc.nos.driver.ovs.ne import OVSEvent
+from vpc.nos.driver.ovs.ne import OVSEvent,OVS
+from vpc.nos import NetworkElementRegister
 
 
 class MBus():
@@ -32,6 +33,7 @@ class OpenFlowChannel(Protocol):
     def __init__(self):
         super().__init__()
         self.ofp = None
+        self.ne_id = None
 
     def dataReceived(self, data):
         mbus.dispatch(self,data)
@@ -49,10 +51,13 @@ class OpenFlowChannel(Protocol):
     def send_message(self,msg):
         self.sendData(msg)
 
-
     def send_hello(self):
         msg = OFP.hello(OFP.VERSIONS)
         self.send_message(msg)
+
+    def _create_ne(self,datapath):
+        ne  = OVS(guid(),self,datapath)
+        NetworkElementRegister().register(ne)
 
     @mbus.route(mbus.ofp.OFPT_HELLO)
     def handle_hello(self,msg):
@@ -69,7 +74,11 @@ class OpenFlowChannel(Protocol):
     @mbus.route(mbus.ofp.OFPT_FEATURES_REPLY)
     def handle_features_reply(self,msg):
         header,data = self.ofp.p.parse(msg)
+        datapath = None
+        self._create_ne(datapath)
         print(header,data)
+
+
 
     @mbus.route(mbus.ofp.OFPT_PACKET_IN)
     def handle_packet_in(self,msg):

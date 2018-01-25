@@ -1,6 +1,6 @@
 #! python3
 # coding: utf-8
-from vpc.nos import NetworkElement,NetworkElementEvent,event_t
+from vpc.nos import NetworkElement,NetworkElementEvent,event_t,EventChain
 
 class OVSEvent(NetworkElementEvent):
 
@@ -9,10 +9,16 @@ class OVSEvent(NetworkElementEvent):
 
 
 class OVS(NetworkElement):
-    def __init__(self,nid,channel):
+    def __init__(self,nid,channel,datapath):
         super().__init__(nid)
         self.chn = channel
         self.ofp = self.chn.ofp
+        self.datapath = datapath
+
+    @property
+    def datapath(self):
+        return self.datapath
+
 
 
 

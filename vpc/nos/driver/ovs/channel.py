@@ -3,8 +3,9 @@
 from twisted.internet import reactor
 from twisted.internet.protocol import Protocol,Factory,connectionDone
 
-from pub import *
+from pub import conf,guid
 from vpc.nos.driver.ovs.openflow import OpenFlowProtocol as OFP
+from vpc.nos.driver.ovs.ne import OVSEvent
 
 
 class MBus():
@@ -60,16 +61,19 @@ class OpenFlowChannel(Protocol):
         version = OFP.negotiate_version(versions,accept_versions)
         if version :
             self.ofp = OFP.get_ofp_instance(version)
+            msg = self.ofp.b.ofp_header(version,self.ofp.OFPT_FEATURES_REQUEST)
+            self.send_message(msg)
         else :
-            self.sendData(OFP.hello_failed())
+            self.send_message(OFP.hello_failed())
 
     @mbus.route(mbus.ofp.OFPT_FEATURES_REPLY)
     def handle_features_reply(self,msg):
-        pass
+        header,data = self.ofp.p.parse(msg)
+        print(header,data)
 
     @mbus.route(mbus.ofp.OFPT_PACKET_IN)
     def handle_packet_in(self,msg):
-        print(msg)
+        header,data = self.ofp.p.parse(msg)
 
     @mbus.route(mbus.ofp.OFPT_ECHO_REQUEST)
     def handle_echo_request(self,msg):

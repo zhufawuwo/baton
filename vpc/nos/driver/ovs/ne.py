@@ -1,6 +1,12 @@
 #! python3
 # coding: utf-8
-from vpc.nos import NetworkElement
+from vpc.nos import NetworkElement,NetworkElementEvent,event_t
+
+class OVSEvent(NetworkElementEvent):
+
+    def __init__(self,eid,nid,type):
+        super().__init__(eid,nid,type)
+
 
 class OVS(NetworkElement):
     def __init__(self,nid,channel):
@@ -8,9 +14,6 @@ class OVS(NetworkElement):
         self.chn = channel
         self.ofp = self.chn.ofp
 
-
-    def _dispatch(self,event):
-        pass
 
 
 

@@ -4,6 +4,7 @@
 import struct
 from lib.openflow import base
 
+
 class OpenFlowProtocol(object):
     OFPT_HELLO = 0
     OFP4 = 4
@@ -18,6 +19,10 @@ class OpenFlowProtocol(object):
         self.b = build
         self.p = parse
         self.oxm = oxm
+
+    @classmethod
+    def hms_xid(cls):
+        return base.hms_xid()
 
     @classmethod
     def parse_ofp_header(cls,msg):

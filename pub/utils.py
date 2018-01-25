@@ -44,7 +44,6 @@ class EnumBase(object):
                 v = vi
             elif type == EnumBase.BIT_SHIFT :
                 v = 1 << vi
-            print(k,v)
             setattr(self,k,v)
             vi = vi + 1
 

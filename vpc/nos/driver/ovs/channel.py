@@ -67,7 +67,7 @@ class OpenFlowChannel(Protocol):
         version = OFP.negotiate_version(versions,accept_versions)
         if version :
             self.ofp = OFP.get_ofp_instance(version)
-            msg = self.ofp.b.ofp_header(version,self.ofp.OFPT_FEATURES_REQUEST)
+            msg = self.ofp.b.ofp_header(version,self.ofp.OFPT_FEATURES_REQUEST,None,None)
             self.send_message(msg)
         else :
             self.send_message(OFP.hello_failed())

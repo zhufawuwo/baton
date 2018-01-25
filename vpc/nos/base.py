@@ -8,22 +8,22 @@ from pub.tree import Node
 from pub.utils import singleton,EnumBase
 
 class NetworkElement():
-    def __init__(self,nid):
-        self.id = nid
+    def __init__(self):
+        self.id = guid()
 
 class NetworkElementEvent(dict):
-    def __init__(self,eid,nid,type):
-        self["id"] = eid
-        self["neid"] = nid
+    def __init__(self,nid,type):
+        self["id"] = guid()
+        self["ne_id"] = nid
         self["type"] = type
 
     @property
-    def eid(self):
-        return self.get("eid")
+    def id(self):
+        return self.get("id")
 
     @property
-    def nid(self):
-        return self.get("nid")
+    def ne_id(self):
+        return self.get("ne_id")
 
     @property
     def type(self):
@@ -31,14 +31,14 @@ class NetworkElementEvent(dict):
 
     @property
     def header(self):
-        Header = namedtuple("Header",["eid","nid","type"])
-        return Header(eid=self.eid,nid=self.nid,type=self.type)
+        Header = namedtuple("Header",["id","ne_id","type"])
+        return Header(eid=self.id,nid=self.ne_id,type=self.type)
 
     @property
     def body(self):
         ret = {}
         for (k,v) in self.items() :
-            if k not in ("eid","nid","type") :
+            if k not in ("id","ne_id","type") :
                 ret[k] = v
         return ret
 
@@ -69,6 +69,9 @@ class EventChain(EventNode):
     def __init__(self):
         super().__init__("entrance")
         self.tag = EventNode.ENTRANCE
+
+    def feed(self,e):
+        self.handle_event(e)
 
 class EventFilter(EventNode):
     def __init__(self,name,f,**kargs):

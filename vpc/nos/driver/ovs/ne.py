@@ -4,13 +4,13 @@ from vpc.nos import NetworkElement,NetworkElementEvent,event_t,EventChain
 
 class OVSEvent(NetworkElementEvent):
 
-    def __init__(self,eid,nid,type):
-        super().__init__(eid,nid,type)
+    def __init__(self,ne_id,type):
+        super().__init__(ne_id,type)
 
 
 class OVS(NetworkElement):
-    def __init__(self,nid,channel,datapath):
-        super().__init__(nid)
+    def __init__(self,channel,datapath):
+        super().__init__()
         self.chn = channel
         self.ofp = self.chn.ofp
         self._datapath = datapath
@@ -19,6 +19,10 @@ class OVS(NetworkElement):
     def datapath(self):
         return self._datapath
 
+
+    def ne_online(self):
+        e = OVSEvent(self.id,event_t.NE_ONLINE)
+        EventChain.feed(e)
 
 
 

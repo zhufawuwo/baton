@@ -3,8 +3,7 @@
 from twisted.internet import reactor
 from twisted.internet.protocol import Protocol,Factory,connectionDone
 
-from pub.config import conf
-from pub.utils import guid
+from pub import *
 from vpc.nos.driver.ovs.openflow import OpenFlowProtocol as OFP
 from vpc.nos.driver.ovs.ne import OVSEvent,OVS
 from vpc.nos import NetworkElementRegister
@@ -74,7 +73,6 @@ class OpenFlowChannel(Protocol):
 
     @mbus.route(mbus.ofp.OFPT_FEATURES_REPLY)
     def handle_features_reply(self,msg):
-        print(msg)
         header,data = self.ofp.p.parse(msg)
         datapath = None
         self._create_ne(datapath)

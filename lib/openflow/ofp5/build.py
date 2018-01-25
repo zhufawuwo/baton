@@ -6,7 +6,7 @@ from . import *
 _len = len
 _type = type
 
-default_xid = lambda: long(random.random()*0xFFFFFFFF)
+default_xid = lambda: int(random.random()*0xFFFFFFFF)
 
 def _obj(obj):
 	if isinstance(obj, str):

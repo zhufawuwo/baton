@@ -84,7 +84,9 @@ class OpenFlowChannel(Protocol):
 
     @mbus.route(mbus.ofp.OFPT_ECHO_REQUEST)
     def handle_echo_request(self,msg):
-        header,data = self.ofp.p.parse(msg)
+        ret = self.ofp.p.parse(msg)
+        header = ret.header
+        data = ret.data
         h = self.ofp.b.ofp_header(header.version,self.ofp.OFPT_ECHO_REPLY,header.length,header.xid)
         reply = self.ofp.b.ofp_(h,data)
         self.send_message(reply)

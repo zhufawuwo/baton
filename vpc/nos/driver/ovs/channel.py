@@ -56,7 +56,7 @@ class OpenFlowChannel(Protocol):
         self.send_message(msg)
 
     def _create_ne(self,datapath):
-        ne  = OVS(guid(),self,datapath)
+        ne  = OVS(self,datapath)
         NetworkElementRegister().register(ne)
         return ne
 

@@ -71,7 +71,7 @@ class EventChain(EventNode):
         self.tag = EventNode.ENTRANCE
 
     def feed(self,e):
-        logger.debug(e)
+        print(e)
         self.handle_event(e)
 
 class EventFilter(EventNode):

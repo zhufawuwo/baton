@@ -13,11 +13,11 @@ class OVS(NetworkElement):
         self.chn = channel
         self.ofp = self.chn.ofp
         self._datapath = datapath
+        self.ne_online()
 
     @property
     def datapath(self):
         return self._datapath
-
 
     def ne_online(self):
         e = OVSEvent(self.id,event_t.NE_ONLINE)

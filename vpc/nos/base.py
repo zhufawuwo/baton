@@ -76,7 +76,6 @@ class EventChain(EventNode):
         super().__init__("entrance",EventNode.ENTRANCE)
 
     def feed(self,e):
-        print(e)
         self.handle_event(e)
 
 class EventFilter(EventNode):
